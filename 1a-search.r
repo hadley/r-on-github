@@ -65,7 +65,7 @@ all_months <- function() {
   unlist(mlply(all, get_month), recursive = FALSE)
 }
 
-repos <- all_months()
+repos <- c(prehistory, all_months())
 forks <- sapply(repos, "[[", "fork")
 
 names <- unique(unname(sapply(repos, "[[", "full_name")))
