@@ -37,7 +37,7 @@ search_repo <- function(query, page = NULL) {
 }
 
 if (!file.exists("cache/prehistory.rds")) {
-  prehistory <- search_repo("created:2000..2010")
+  prehistory <- search_repo("created:<=2010")
   saveRDS(prehistory, "cache/prehistory.rds") 
 } else {
   prehistory <- readRDS("cache/prehistory.rds")
@@ -48,7 +48,7 @@ get_month <- function(year, month) {
   if (file.exists(cache_path)) return(readRDS(cache_path))
   
   message("Downloading repos created in ", year, "-", month)
-  query <- paste0("created:", year, "-", month, "..", year, "-", month)
+  query <- paste0("created:", year, "-", month - 1, "..", year, "-", month)
   results <- search_repo(query)
   
   saveRDS(results, cache_path)
@@ -58,7 +58,7 @@ get_month <- function(year, month) {
 all_months <- function() {
   cur_year <- year(today())
   
-  past <- expand.grid(year = 2011:cur_year, month = 1:12)
+  past <- expand.grid(year = 2011:(cur_year - 1), month = 1:12)
   pres <- data.frame(year = cur_year, month = 1:(month(today()) - 1))
   all <- rbind(past, pres)
   
@@ -68,7 +68,7 @@ all_months <- function() {
 repos <- all_months()
 forks <- sapply(repos, "[[", "fork")
 
-names <- unname(sapply(repos, "[[", "full_name"))
+names <- unique(unname(sapply(repos, "[[", "full_name")))
 saveRDS(names, "repos.rds")
 
 # Distribution of repo counts
