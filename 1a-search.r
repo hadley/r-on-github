@@ -37,7 +37,7 @@ search_repo <- function(query, page = NULL) {
 }
 
 if (!file.exists("cache/prehistory.rds")) {
-  prehistory <- search_repo("created:<=2010")
+  prehistory <- search_repo("created:<2011")
   saveRDS(prehistory, "cache/prehistory.rds") 
 } else {
   prehistory <- readRDS("cache/prehistory.rds")
